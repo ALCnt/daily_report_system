@@ -219,4 +219,23 @@ public class EmployeeAction extends ActionBase {
         }
     }
 
+    /*
+     * 論理削除を行う
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void destroy() throws ServletException, IOException{
+        //CSRF対策 tokenチェック
+        if(checkToken()) {
+            //idを条件に従業員データを論理削除
+            service.destroy(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+
+            //セッションに削除完了のフラッシュメッセを設定
+            putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED.getMessage());
+
+            //一覧画面にリダイレクト
+            redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
+        }
+    }
+
 }
